@@ -10,7 +10,7 @@ const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
 
 let previousTimeMs = 0;
 
-function draw(ctx: CanvasRenderingContext2D, level: Level, state: State) {
+function render(ctx: CanvasRenderingContext2D, level: Level, state: State) {
   // Draw game here
   level.render(ctx);
   state.render(ctx);
@@ -25,7 +25,7 @@ function update(ctx: CanvasRenderingContext2D, level: Level, state: State) {
       const offset = deltaTimeMs % FRAME_INTERVAL_MS;
       previousTimeMs = currentTimeMs - offset;
     }
-    draw(ctx, level, state);
+    render(ctx, level, state);
     update(ctx, level, state);
   });
 }
