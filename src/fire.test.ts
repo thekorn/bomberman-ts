@@ -8,7 +8,7 @@ class TestFire extends Fire {
   }
 }
 
-test('should get position from index', () => {
+test('should return the correct sprite name and isDone status', () => {
   const pos = new Pos(0, 0);
   const f = new TestFire(pos, 10, 10, new Map());
   expect(f.isDone).toBe(false);
