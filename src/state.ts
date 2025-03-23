@@ -45,22 +45,17 @@ export class State {
       return;
     }
     if (this.isKeyDown('ArrowLeft')) {
-      console.log('move left');
       this.player.move(-1, 0);
     } else if (this.isKeyDown('ArrowRight')) {
       this.player.move(1, 0);
     } else if (this.isKeyDown('ArrowUp')) {
-      console.log('move up');
       this.player.move(0, -1);
     } else if (this.isKeyDown('ArrowDown')) {
-      console.log('move down');
       this.player.move(0, 1);
     } else if (this.isKeyDown(' ')) {
       const key = `${this.player.pos.x},${this.player.pos.y}`;
       if (!this.bombs.has(key)) {
         const p = new Pos(this.player.pos.x, this.player.pos.y);
-
-        console.log('place bomb', p.x, p.y);
         this.bombs.set(
           key,
           new Bomb(p, this.width, this.height, this.spriteSheet),
