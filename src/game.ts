@@ -3,13 +3,22 @@ import BaseLevel, { Level } from './level';
 import { Player } from './player';
 import createSpriteSheet, { loadSpriteSheetFromUrl } from './spriteSheet';
 
-const MAX_FPS = 20;
+const MAX_FPS = 10;
 const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
 
 let previousTimeMs = 0;
 
 const pressedKeys = new Set<string>();
 const isKeyDown = (key: string) => pressedKeys.has(key);
+
+function emitKeyDown(event: KeyboardEvent) {
+  pressedKeys.add(event.key);
+}
+
+function emitKeyUp(event: KeyboardEvent, player: Player) {
+  pressedKeys.delete(event.key);
+  player.isWalking = false;
+}
 
 function updatePhysics(player: Player) {
   if (isKeyDown('ArrowLeft')) {
@@ -59,9 +68,6 @@ export async function setupGame(
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, element.width, element.height);
 
-  document.addEventListener('keydown', (e) => pressedKeys.add(e.key));
-  document.addEventListener('keyup', (e) => pressedKeys.delete(e.key));
-
   const sprites = await loadSpriteSheetFromUrl(SPRITES);
 
   const spriteSheet = await createSpriteSheet(sprites, [
@@ -80,6 +86,9 @@ export async function setupGame(
 
   const level = new Level(cols, rows, BaseLevel, spriteSheet);
   const player = new Player(cols, rows, spriteSheet, level);
+
+  document.addEventListener('keydown', (e) => emitKeyDown(e));
+  document.addEventListener('keyup', (e) => emitKeyUp(e, player));
 
   update(ctx, level, player);
 }

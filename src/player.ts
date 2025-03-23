@@ -6,6 +6,7 @@ import { assert } from './utils';
 export class Player {
   /** Position of the player's feet */
   public pos: Pos;
+  public isWalking: boolean;
   private frame: number;
   constructor(
     public width: number,
@@ -15,10 +16,12 @@ export class Player {
   ) {
     this.pos = level.initialPlayerPos;
     this.frame = 0;
+    this.isWalking = false;
   }
 
   move(x: number, y: number) {
     if (this.canMove(this.pos.x + x, this.pos.y + y)) {
+      this.isWalking = true;
       this.pos.x += x;
       this.pos.y += y;
     }
@@ -31,7 +34,7 @@ export class Player {
   render(ctx: CanvasRenderingContext2D) {
     const dimX = ctx.canvas.width / this.width;
     const dimY = ctx.canvas.height / this.height;
-    const sprite_name = `bomber-man-${this.frame}`;
+    const sprite_name = `bomber-man-${this.isWalking ? this.frame : 0}`;
     this.frame = (this.frame + 1) % 8;
     const sprite = this.spriteSheet.get(sprite_name);
     assert(
