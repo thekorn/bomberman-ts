@@ -10,9 +10,9 @@ const level: Tile[][] = [
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
+  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
+  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
+  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
@@ -33,6 +33,11 @@ export class Level {
     this.levelMap = createMap(width, height, level);
   }
 
+  isWall(x: number, y: number): boolean {
+    const index = y * this.width + x;
+    return this.levelMap[index] === "W";
+  }
+
   render(ctx: CanvasRenderingContext2D) {
     const dimX = ctx.canvas.width / this.width;
     const dimY = ctx.canvas.height / this.height;
@@ -47,15 +52,5 @@ export class Level {
       );
       ctx.drawImage(sprite, x * dimX, y * dimY, dimX, dimY);
     }
-
-    //let x = 0;
-    //let y = 0;
-    //const sprite = this.spriteSheet.get('W');
-    //assert(sprite !== undefined, `Sprite "W" not found in sprite sheet`);
-    //ctx.drawImage(sprite, x * dimX, y * dimY, dimX, dimY);
-    //x = this.width - 1;
-    //y = this.height - 1;
-    //assert(sprite !== undefined, `Sprite "W" not found in sprite sheet`);
-    //ctx.drawImage(sprite, x * dimX, y * dimY, dimX, dimY);
   }
 }
