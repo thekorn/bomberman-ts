@@ -21,7 +21,7 @@ export class State {
     public level: Level,
   ) {}
 
-  private isKeyDown(key: string) {
+  protected isKeyDown(key: string) {
     return this.pressedKeys.has(key);
   }
 
@@ -31,6 +31,7 @@ export class State {
 
   emitKeyUp(event: KeyboardEvent) {
     this.pressedKeys.delete(event.key);
+    //FIXME: this needs to be set within the player class
     this.player.isWalking = false;
   }
 
@@ -45,13 +46,13 @@ export class State {
       return;
     }
     if (this.isKeyDown('ArrowLeft')) {
-      this.player.move(-1, 0);
+      this.player.moveBy(-1, 0);
     } else if (this.isKeyDown('ArrowRight')) {
-      this.player.move(1, 0);
+      this.player.moveBy(1, 0);
     } else if (this.isKeyDown('ArrowUp')) {
-      this.player.move(0, -1);
+      this.player.moveBy(0, -1);
     } else if (this.isKeyDown('ArrowDown')) {
-      this.player.move(0, 1);
+      this.player.moveBy(0, 1);
     } else if (this.isKeyDown(' ')) {
       const key = `${this.player.pos.x},${this.player.pos.y}`;
       if (!this.bombs.has(key)) {

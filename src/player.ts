@@ -22,16 +22,22 @@ export class Player {
     this.isWalking = false;
   }
 
-  move(x: number, y: number) {
-    if (this.canMove(this.pos.x + x, this.pos.y + y)) {
+  moveBy(x: number, y: number) {
+    if (this.canMoveTo(this.pos.x + x, this.pos.y + y)) {
       this.isWalking = true;
       this.pos.x += x;
       this.pos.y += y;
     }
   }
 
-  canMove(x: number, y: number): boolean {
-    return !this.level.isWall(x, y);
+  canMoveTo(x: number, y: number): boolean {
+    return (
+      x >= 0 &&
+      x < this.level.width &&
+      y >= 0 &&
+      y < this.level.height &&
+      !this.level.isWall(x, y)
+    );
   }
 
   takeDamage(amount = 1) {
