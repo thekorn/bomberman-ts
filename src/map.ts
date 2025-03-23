@@ -2,10 +2,15 @@ import { Pos } from './pos';
 import { assert } from './utils';
 
 export const Wall = 'W' as const;
+export const Destroyable = 'D' as const;
 export const Walkable = 'O' as const;
 export const Player = 'P' as const;
 
-export type Tile = typeof Wall | typeof Walkable | typeof Player;
+export type Tile =
+  | typeof Wall
+  | typeof Walkable
+  | typeof Player
+  | typeof Destroyable;
 
 export function createMap(
   width: number,
