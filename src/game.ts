@@ -1,5 +1,7 @@
-import Level from './level';
-import { createMap } from './map';
+import SPRITES from '/sprite.png';
+import BaseLevel, { Level } from './level';
+import type { createMap } from './map';
+import createSpriteSheet, { loadSpriteSheetFromUrl } from './spriteSheet';
 
 const MAX_FPS = 60;
 const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
@@ -22,11 +24,12 @@ function updatePhysics() {
   }
 }
 
-function draw() {
+function draw(ctx: CanvasRenderingContext2D, level: Level) {
   // Draw game here
+  level.render(ctx);
 }
 
-function update() {
+function update(ctx: CanvasRenderingContext2D, level: Level) {
   requestAnimationFrame((currentTimeMs) => {
     const deltaTimeMs = currentTimeMs - previousTimeMs;
     if (deltaTimeMs >= FRAME_INTERVAL_MS) {
@@ -35,12 +38,12 @@ function update() {
       const offset = deltaTimeMs % FRAME_INTERVAL_MS;
       previousTimeMs = currentTimeMs - offset;
     }
-    draw();
-    update();
+    draw(ctx, level);
+    update(ctx, level);
   });
 }
 
-export function setupGame(element: HTMLCanvasElement) {
+export async function setupGame(element: HTMLCanvasElement) {
   console.log('setupGame', element);
   const ctx = element.getContext('2d');
   if (!ctx) {
@@ -52,8 +55,16 @@ export function setupGame(element: HTMLCanvasElement) {
   document.addEventListener('keydown', (e) => pressedKeys.add(e.key));
   document.addEventListener('keyup', (e) => pressedKeys.delete(e.key));
 
-  levelMap = createMap(23, 12, Level);
-  console.log('map', levelMap);
+  const sprites = await loadSpriteSheetFromUrl(SPRITES);
 
-  update();
+  const spriteSheet = await createSpriteSheet(sprites, [
+    ['O', [0, 0, 64, 64]],
+    ['W', [64, 0, 64, 64]],
+  ]);
+
+  const level = new Level(23, 12, BaseLevel, spriteSheet);
+
+  console.log(spriteSheet);
+
+  update(ctx, level);
 }
