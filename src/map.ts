@@ -19,7 +19,6 @@ export function createMap(
 ): [Tile[], Pos] {
   let playerPos: Pos | undefined = undefined;
   assert(height === level.length, 'height must match level length');
-  console.log('Creating map...');
   const result: Tile[] = [];
   for (let y = 0; y < height; y++) {
     assert(level[y].length === width, 'width must match level width');
