@@ -21,7 +21,7 @@ export class Bomb {
     return this.state < 0;
   }
 
-  private getSpriteName(): string {
+  protected getSpriteName(): string {
     if (this.state > 0.66 * DURATION) return 'bomb-0';
     if (this.state > 0.33 * DURATION) return 'bomb-1';
     return 'bomb-2';
