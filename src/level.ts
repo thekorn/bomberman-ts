@@ -1,4 +1,5 @@
 import { type Tile, createMap } from "./map";
+import { Pos } from "./pos";
 import type { ISpriteSheet } from "./spriteSheet";
 import { assert } from "./utils";
 
@@ -7,7 +8,7 @@ const fill = (length: number, tile: Tile | Tile[]) => Array(length).fill(tile);
 // 23 x 12
 const level: Tile[][] = [
   [...fill(23, "W")],
-  ["W", ...fill(21, "O"), "W"],
+  ["W", "P", ...fill(20, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(21, "O"), "W"],
   ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
@@ -24,13 +25,14 @@ export default level;
 
 export class Level {
   public levelMap: Tile[];
+  public readonly initialPlayerPos: Pos;
   constructor(
     public width: number,
     public height: number,
     level: Tile[][],
     public spriteSheet: ISpriteSheet,
   ) {
-    this.levelMap = createMap(width, height, level);
+    [this.levelMap, this.initialPlayerPos] = createMap(width, height, level);
   }
 
   isWall(x: number, y: number): boolean {
@@ -43,14 +45,13 @@ export class Level {
     const dimY = ctx.canvas.height / this.height;
 
     for (const [i, tile] of this.levelMap.entries()) {
-      const x = i % this.width;
-      const y = Math.floor(i / this.width);
+      const pos = Pos.fromIndex(i, this.width);
       const sprite = this.spriteSheet.get(tile);
       assert(
         sprite !== undefined,
         `Sprite "${tile}" not found in sprite sheet`,
       );
-      ctx.drawImage(sprite, x * dimX, y * dimY, dimX, dimY);
+      ctx.drawImage(sprite, pos.x * dimX, pos.y * dimY, dimX, dimY);
     }
   }
 }

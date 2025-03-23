@@ -1,29 +1,23 @@
 import { Level } from "./level";
+import { Pos } from "./pos";
 import { ISpriteSheet } from "./spriteSheet";
 import { assert } from "./utils";
 
 export class Player {
-  public x: number;
-  public y: number;
+  public pos: Pos;
   constructor(
     public width: number,
     public height: number,
     public spriteSheet: ISpriteSheet,
     public level: Level,
-    initialX: number,
-    initialY: number,
   ) {
-    this.x = initialX;
-    this.y = initialY;
+    this.pos = level.initialPlayerPos;
   }
 
   move(x: number, y: number) {
-    const feetX = this.x;
-    const feetY = this.y + 1;
-
-    if (this.canMove(feetX + x, feetY + y)) {
-      this.x += x;
-      this.y += y;
+    if (this.canMove(this.pos.x + x, this.pos.y + 1 + y)) {
+      this.pos.x += x;
+      this.pos.y += y;
     }
   }
 
@@ -39,6 +33,6 @@ export class Player {
       sprite !== undefined,
       `Sprite "bomber-man-0" not found in sprite sheet`,
     );
-    ctx.drawImage(sprite, this.x * dimX, this.y * dimY, dimX, dimY * 2);
+    ctx.drawImage(sprite, this.pos.x * dimX, this.pos.y * dimY, dimX, dimY * 2);
   }
 }

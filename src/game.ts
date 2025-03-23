@@ -79,9 +79,7 @@ export async function setupGame(
   ]);
 
   const level = new Level(cols, rows, BaseLevel, spriteSheet);
-  const player = new Player(cols, rows, spriteSheet, level, 1, 0);
-
-  console.log(spriteSheet);
+  const player = new Player(cols, rows, spriteSheet, level);
 
   update(ctx, level, player);
 }
