@@ -5,12 +5,14 @@ import { assert } from './utils.ts';
 const GridCols = 23;
 const GridRows = 12;
 
+const CellSize = 35;
+
 const app = document.querySelector<HTMLDivElement>('#app');
 assert(app !== null, 'app element not found');
 app.innerHTML = `
   <main>
     <h1>Bomberman</h1>
-    <canvas id="game" width="${GridCols * 35}" height="${GridRows * 35}"></canvas>
+    <canvas id="game" width="${GridCols * CellSize}" height="${GridRows * CellSize}"></canvas>
   </main>
 `;
 
