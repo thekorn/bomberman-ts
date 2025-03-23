@@ -28,6 +28,15 @@ export class State {
   }
 
   update() {
+    if (this.player.isDead) {
+      if (this.isKeyDown('r')) {
+        console.log('RESTART');
+      }
+      for (const bomb of this.bombs.values()) {
+        bomb.tick();
+      }
+      return;
+    }
     if (this.isKeyDown('ArrowLeft')) {
       console.log('move left');
       this.player.move(-1, 0);
@@ -55,12 +64,6 @@ export class State {
       if (bomb.isDone) {
         this.bombs.delete(key);
       }
-      console.log(
-        bomb.pos.x,
-        this.player.pos.x,
-        bomb.pos.y - 1,
-        this.player.pos.y,
-      );
       if (
         bomb.pos.x === this.player.pos.x &&
         bomb.pos.y - 1 === this.player.pos.y &&
@@ -69,18 +72,46 @@ export class State {
         this.player.takeDamage();
       }
     }
-
-    if (this.player.isDead) {
-      console.log('PLAYER IS DEAD');
-    }
-
-    console.log('update physics', this.bombs);
   }
 
   render(ctx: CanvasRenderingContext2D) {
     for (const bomb of this.bombs.values()) {
       bomb.render(ctx);
     }
-    this.player.render(ctx);
+
+    if (this.player.isDead) {
+      const canvas = ctx.canvas;
+
+      const text = 'Game Over';
+      ctx.font = 'bold 48px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const textMetrics = ctx.measureText(text);
+      const textWidth = textMetrics.width;
+      const textHeight = 48;
+
+      const padding = 10;
+      const boxWidth = textWidth + padding * 2;
+      const boxHeight = textHeight + padding * 2;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      const boxX = centerX - boxWidth / 2;
+      const boxY = centerY - boxHeight / 2;
+
+      ctx.fillStyle = 'white';
+      ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+      ctx.fillStyle = 'black';
+      ctx.fillText(text, centerX, centerY);
+    } else {
+      this.player.render(ctx);
+    }
   }
 }

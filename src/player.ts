@@ -52,6 +52,7 @@ export class Player {
       sprite !== undefined,
       `Sprite "${sprite_name}" not found in sprite sheet`,
     );
+
     ctx.drawImage(
       sprite,
       this.pos.x * dimX,
@@ -59,8 +60,22 @@ export class Player {
       dimX,
       dimY * 2,
     );
-    if (this.health < MAX_HEALTH && !this.isDead) {
-      console.log('Player is hurt', this.health / MAX_HEALTH);
+
+    if (this.health < MAX_HEALTH) {
+      // generate a red health overlay per image mask in an offscreen canvas
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = dimX;
+      offCanvas.height = dimY * 2;
+      const offCtx = offCanvas.getContext('2d');
+      assert(!!offCtx, 'Failed to get mask canvas context');
+
+      offCtx.drawImage(sprite, 0, 0, dimX, dimY * 2);
+      offCtx.globalCompositeOperation = 'source-in';
+      offCtx.fillStyle = `rgba(255, 0, 0, ${1 - this.health / MAX_HEALTH})`;
+      offCtx.fillRect(0, 0, dimX, dimY * 2 * (1 - this.health / MAX_HEALTH));
+      offCtx.globalCompositeOperation = 'source-over';
+
+      ctx.drawImage(offCanvas, this.pos.x * dimX, (this.pos.y - 1) * dimY);
     }
   }
 }

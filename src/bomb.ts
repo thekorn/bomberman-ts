@@ -29,7 +29,7 @@ export class Bomb {
     if (this.state > 0.9 * DURATION) return 'bomb-0';
     if (this.state > 0.8 * DURATION) return 'bomb-1';
     if (this.state > 0.7 * DURATION) return 'bomb-2';
-    return `fire-${this.state % 5}`;
+    return `fire-${Math.abs(this.state % 5)}`;
   }
 
   render(ctx: CanvasRenderingContext2D) {
