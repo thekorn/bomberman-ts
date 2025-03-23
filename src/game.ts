@@ -43,7 +43,11 @@ function update(ctx: CanvasRenderingContext2D, level: Level) {
   });
 }
 
-export async function setupGame(element: HTMLCanvasElement) {
+export async function setupGame(
+  cols: number,
+  rows: number,
+  element: HTMLCanvasElement,
+) {
   console.log('setupGame', element);
   const ctx = element.getContext('2d');
   if (!ctx) {
@@ -62,7 +66,7 @@ export async function setupGame(element: HTMLCanvasElement) {
     ['W', [64, 0, 64, 64]],
   ]);
 
-  const level = new Level(23, 12, BaseLevel, spriteSheet);
+  const level = new Level(cols, rows, BaseLevel, spriteSheet);
 
   console.log(spriteSheet);
 
