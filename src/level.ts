@@ -1,24 +1,24 @@
-import { type Tile, createMap } from "./map";
-import { Pos } from "./pos";
-import type { ISpriteSheet } from "./spriteSheet";
-import { assert } from "./utils";
+import { type Tile, createMap } from './map';
+import { Pos } from './pos';
+import type { ISpriteSheet } from './spriteSheet';
+import { assert } from './utils';
 
 const fill = (length: number, tile: Tile | Tile[]) => Array(length).fill(tile);
 
 // 23 x 12
 const level: Tile[][] = [
-  [...fill(23, "W")],
-  ["W", "P", ...fill(20, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
-  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
-  ["W", ...fill(10, "O"), "W", ...fill(10, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  ["W", ...fill(21, "O"), "W"],
-  [...fill(23, "W")],
+  [...fill(23, 'W')],
+  ['W', 'P', ...fill(20, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  ['W', ...fill(10, 'O'), 'W', ...fill(10, 'O'), 'W'],
+  ['W', ...fill(10, 'O'), 'W', ...fill(10, 'O'), 'W'],
+  ['W', ...fill(10, 'O'), 'W', ...fill(10, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  ['W', ...fill(21, 'O'), 'W'],
+  [...fill(23, 'W')],
 ];
 
 export default level;
@@ -37,7 +37,7 @@ export class Level {
 
   isWall(x: number, y: number): boolean {
     const index = y * this.width + x;
-    return this.levelMap[index] === "W";
+    return this.levelMap[index] === 'W';
   }
 
   render(ctx: CanvasRenderingContext2D) {

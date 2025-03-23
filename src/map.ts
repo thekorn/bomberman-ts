@@ -29,5 +29,5 @@ export function createMap(
     }
   }
   assert(playerPos !== undefined, "no player found");
-  return [result, playerPos!];
+  return [result, playerPos];
 }

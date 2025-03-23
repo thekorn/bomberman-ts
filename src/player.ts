@@ -1,11 +1,12 @@
-import type { Level } from "./level";
-import type { Pos } from "./pos";
-import type { ISpriteSheet } from "./spriteSheet";
-import { assert } from "./utils";
+import type { Level } from './level';
+import type { Pos } from './pos';
+import type { ISpriteSheet } from './spriteSheet';
+import { assert } from './utils';
 
 export class Player {
   /** Position of the player's feet */
   public pos: Pos;
+  private frame: number;
   constructor(
     public width: number,
     public height: number,
@@ -13,6 +14,7 @@ export class Player {
     public level: Level,
   ) {
     this.pos = level.initialPlayerPos;
+    this.frame = 0;
   }
 
   move(x: number, y: number) {
@@ -29,10 +31,12 @@ export class Player {
   render(ctx: CanvasRenderingContext2D) {
     const dimX = ctx.canvas.width / this.width;
     const dimY = ctx.canvas.height / this.height;
-    const sprite = this.spriteSheet.get("bomber-man-0");
+    const sprite_name = `bomber-man-${this.frame}`;
+    this.frame = (this.frame + 1) % 8;
+    const sprite = this.spriteSheet.get(sprite_name);
     assert(
       sprite !== undefined,
-      `Sprite "bomber-man-0" not found in sprite sheet`,
+      `Sprite "${sprite_name}" not found in sprite sheet`,
     );
     ctx.drawImage(
       sprite,
