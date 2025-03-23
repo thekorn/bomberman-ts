@@ -1,4 +1,5 @@
 import { Bomb } from './bomb';
+import { Fire } from './fire';
 import type { Player } from './player';
 import { Pos } from './pos';
 import type { ISpriteSheet } from './spriteSheet';
@@ -6,6 +7,7 @@ import type { ISpriteSheet } from './spriteSheet';
 export class State {
   public pressedKeys = new Set<string>();
   public bombs = new Map<string, Bomb>();
+  public fires = new Map<string, Fire>();
 
   constructor(
     public player: Player,
@@ -63,11 +65,19 @@ export class State {
       bomb.tick();
       if (bomb.isDone) {
         this.bombs.delete(key);
+        this.fires.set(
+          key,
+          new Fire(bomb.pos, this.width, this.height, this.spriteSheet),
+        );
       }
-      if (
-        bomb.pos.x === this.player.pos.x &&
-        bomb.pos.y - 1 === this.player.pos.y &&
-        bomb.isExploded
+    }
+    for (const [key, fire] of this.fires.entries()) {
+      fire.tick();
+      if (fire.isDone) {
+        this.fires.delete(key);
+      } else if (
+        fire.pos.x === this.player.pos.x &&
+        fire.pos.y - 1 === this.player.pos.y
       ) {
         this.player.takeDamage();
       }
@@ -77,6 +87,10 @@ export class State {
   render(ctx: CanvasRenderingContext2D) {
     for (const bomb of this.bombs.values()) {
       bomb.render(ctx);
+    }
+
+    for (const fire of this.fires.values()) {
+      fire.render(ctx);
     }
 
     if (this.player.isDead) {

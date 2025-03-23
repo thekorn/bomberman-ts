@@ -2,9 +2,9 @@ import type { Pos } from './pos';
 import type { ISpriteSheet } from './spriteSheet';
 import { assert } from './utils';
 
-const DURATION = 30;
+const DURATION = 70;
 
-export class Bomb {
+export class Fire {
   private state = DURATION;
   constructor(
     public pos: Pos,
@@ -22,9 +22,7 @@ export class Bomb {
   }
 
   private getSpriteName(): string {
-    if (this.state > 0.66 * DURATION) return 'bomb-0';
-    if (this.state > 0.33 * DURATION) return 'bomb-1';
-    return 'bomb-2';
+    return `fire-${Math.abs(this.state % 5)}`;
   }
 
   render(ctx: CanvasRenderingContext2D) {
