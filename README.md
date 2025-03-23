@@ -1,5 +1,7 @@
 # Bomberman TS
 
+![ci workflow](https://github.com/thekorn/bomberman-ts/actions/workflows/ci.yml/badge.svg)
+
 typescript implementation of the bomberman game
 
 ## screenshot
