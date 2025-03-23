@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  cache-and-install:
+  cache-and-install-test:
     runs-on: ubuntu-latest
 
     steps:
