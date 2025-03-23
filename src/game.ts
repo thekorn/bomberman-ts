@@ -10,13 +10,11 @@ const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
 
 let previousTimeMs = 0;
 
-function render(ctx: CanvasRenderingContext2D, level: Level, state: State) {
-  // Draw game here
-  level.render(ctx);
+function render(ctx: CanvasRenderingContext2D, state: State) {
   state.render(ctx);
 }
 
-function update(ctx: CanvasRenderingContext2D, level: Level, state: State) {
+function update(ctx: CanvasRenderingContext2D, state: State) {
   requestAnimationFrame((currentTimeMs) => {
     const deltaTimeMs = currentTimeMs - previousTimeMs;
     if (deltaTimeMs >= FRAME_INTERVAL_MS) {
@@ -25,8 +23,8 @@ function update(ctx: CanvasRenderingContext2D, level: Level, state: State) {
       const offset = deltaTimeMs % FRAME_INTERVAL_MS;
       previousTimeMs = currentTimeMs - offset;
     }
-    render(ctx, level, state);
-    update(ctx, level, state);
+    render(ctx, state);
+    update(ctx, state);
   });
 }
 
@@ -69,10 +67,10 @@ export async function setupGame(
   const level = new Level(cols, rows, BaseLevel, spriteSheet);
   const player = new Player(cols, rows, spriteSheet, level);
 
-  const state = new State(player, cols, rows, spriteSheet);
+  const state = new State(player, cols, rows, spriteSheet, level);
 
   document.addEventListener('keydown', (e) => state.emitKeyDown(e));
   document.addEventListener('keyup', (e) => state.emitKeyUp(e));
 
-  update(ctx, level, state);
+  update(ctx, state);
 }

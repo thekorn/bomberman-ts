@@ -1,5 +1,7 @@
 import { Bomb } from './bomb';
 import { Fire } from './fire';
+import type { Level } from './level';
+import { Wall } from './map';
 import type { Player } from './player';
 import { Pos } from './pos';
 import type { ISpriteSheet } from './spriteSheet';
@@ -11,9 +13,12 @@ export class State {
 
   constructor(
     public player: Player,
+    /** grid width */
     public width: number,
+    /** grid height */
     public height: number,
     public spriteSheet: ISpriteSheet,
+    public level: Level,
   ) {}
 
   private isKeyDown(key: string) {
@@ -51,10 +56,11 @@ export class State {
       console.log('move down');
       this.player.move(0, 1);
     } else if (this.isKeyDown(' ')) {
-      console.log('place bomb');
       const key = `${this.player.pos.x},${this.player.pos.y}`;
       if (!this.bombs.has(key)) {
-        const p = new Pos(this.player.pos.x, this.player.pos.y + 1);
+        const p = new Pos(this.player.pos.x, this.player.pos.y);
+
+        console.log('place bomb', p.x, p.y);
         this.bombs.set(
           key,
           new Bomb(p, this.width, this.height, this.spriteSheet),
@@ -65,10 +71,15 @@ export class State {
       bomb.tick();
       if (bomb.isDone) {
         this.bombs.delete(key);
-        this.fires.set(
-          key,
-          new Fire(bomb.pos, this.width, this.height, this.spriteSheet),
-        );
+        const newFirePos = this.getNewFirePositions(bomb.pos);
+
+        for (const pos of newFirePos) {
+          const fireKey = `${pos.x},${pos.y}`;
+          this.fires.set(
+            fireKey,
+            new Fire(pos, this.width, this.height, this.spriteSheet),
+          );
+        }
       }
     }
     for (const [key, fire] of this.fires.entries()) {
@@ -77,11 +88,60 @@ export class State {
         this.fires.delete(key);
       } else if (
         fire.pos.x === this.player.pos.x &&
-        fire.pos.y - 1 === this.player.pos.y
+        fire.pos.y === this.player.pos.y
       ) {
         this.player.takeDamage();
       }
     }
+  }
+
+  private getNewFirePositions(bombPos: Pos): MapIterator<Pos> {
+    const newFirePos = new Map<string, Pos>();
+    for (let i = 0; i <= 4; i++) {
+      const x = bombPos.x - i;
+      if (x < 0) continue;
+      const pos = new Pos(x, bombPos.y);
+      const item = this.level.levelMap[pos.toIndex(this.width, this.height)];
+      if (item === Wall) {
+        break;
+      }
+      newFirePos.set(`${pos.x},${pos.y}`, pos);
+    }
+
+    for (let i = 0; i <= 4; i++) {
+      const x = bombPos.x + i;
+      if (x > this.width) continue;
+      const pos = new Pos(x, bombPos.y);
+      const item = this.level.levelMap[pos.toIndex(this.width, this.height)];
+      if (item === Wall) {
+        break;
+      }
+      newFirePos.set(`${pos.x},${pos.y}`, pos);
+    }
+
+    for (let i = 0; i <= 4; i++) {
+      const y = bombPos.y - i;
+      if (y < 0) continue;
+      const pos = new Pos(bombPos.x, y);
+      const item = this.level.levelMap[pos.toIndex(this.width, this.height)];
+      if (item === Wall) {
+        break;
+      }
+      newFirePos.set(`${pos.x},${pos.y}`, pos);
+    }
+
+    for (let i = 0; i <= 4; i++) {
+      const y = bombPos.y + i;
+      if (y > this.height) continue;
+      const pos = new Pos(bombPos.x, y);
+      const item = this.level.levelMap[pos.toIndex(this.width, this.height)];
+      if (item === Wall) {
+        break;
+      }
+      newFirePos.set(`${pos.x},${pos.y}`, pos);
+    }
+
+    return newFirePos.values();
   }
 
   private renderGameOver(ctx: CanvasRenderingContext2D) {
@@ -118,6 +178,7 @@ export class State {
   }
 
   render(ctx: CanvasRenderingContext2D) {
+    this.level.render(ctx);
     for (const bomb of this.bombs.values()) {
       bomb.render(ctx);
     }

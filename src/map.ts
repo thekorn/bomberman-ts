@@ -1,9 +1,9 @@
 import { Pos } from './pos';
 import { assert } from './utils';
 
-const Wall = 'W' as const;
-const Walkable = 'O' as const;
-const Player = 'P' as const;
+export const Wall = 'W' as const;
+export const Walkable = 'O' as const;
+export const Player = 'P' as const;
 
 export type Tile = typeof Wall | typeof Walkable | typeof Player;
 

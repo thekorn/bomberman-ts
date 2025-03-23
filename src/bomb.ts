@@ -36,12 +36,6 @@ export class Bomb {
       sprite !== undefined,
       `Sprite "${sprite_name}" not found in sprite sheet`,
     );
-    ctx.drawImage(
-      sprite,
-      this.pos.x * dimX,
-      (this.pos.y - 1) * dimY,
-      dimX,
-      dimY,
-    );
+    ctx.drawImage(sprite, this.pos.x * dimX, this.pos.y * dimY, dimX, dimY);
   }
 }
