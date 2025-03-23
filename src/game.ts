@@ -1,7 +1,7 @@
 import SPRITES from '/sprite.png';
 import BaseLevel, { Level } from './level';
 import { Player } from './player';
-import createSpriteSheet, { loadSpriteSheetFromUrl } from './spriteSheet';
+import { loadSpriteSheet } from './spriteSheet';
 
 const MAX_FPS = 10;
 const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
@@ -68,9 +68,7 @@ export async function setupGame(
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, element.width, element.height);
 
-  const sprites = await loadSpriteSheetFromUrl(SPRITES);
-
-  const spriteSheet = await createSpriteSheet(sprites, [
+  const spriteSheet = await loadSpriteSheet(SPRITES, [
     ['O', [0, 0, 64, 64]],
     ['W', [64, 0, 64, 64]],
 

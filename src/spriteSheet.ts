@@ -1,9 +1,7 @@
 // [sprite name, [x, y, width, height]]
 type SpriteDefinition = [string, [number, number, number, number]];
 
-export const loadSpriteSheetFromUrl = (
-  url: string,
-): Promise<HTMLImageElement> =>
+const loadSpriteSheetFromUrl = (url: string): Promise<HTMLImageElement> =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -29,6 +27,13 @@ const spriteSheetCreator =
   };
 
 const createSpriteSheet = spriteSheetCreator(window.createImageBitmap);
-export default createSpriteSheet;
+
+export async function loadSpriteSheet(
+  url: string,
+  definitions: SpriteDefinition[],
+): Promise<Map<string, ImageBitmap>> {
+  const sheet = await loadSpriteSheetFromUrl(url);
+  return createSpriteSheet(sheet, definitions);
+}
 
 export type ISpriteSheet = Awaited<ReturnType<typeof createSpriteSheet>>;
