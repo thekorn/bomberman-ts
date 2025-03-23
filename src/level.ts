@@ -45,7 +45,7 @@ export class Level {
     const dimY = ctx.canvas.height / this.height;
 
     for (const [i, tile] of this.levelMap.entries()) {
-      const pos = Pos.fromIndex(i, this.width);
+      const pos = Pos.fromIndex(i, this.height, this.width);
       const sprite = this.spriteSheet.get(tile);
       assert(
         sprite !== undefined,
