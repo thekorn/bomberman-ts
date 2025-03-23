@@ -1,13 +1,14 @@
 // [sprite name, [x, y, width, height]]
 type SpriteDefinition = [string, [number, number, number, number]];
 
-const loadSpriteSheetFromUrl = (url: string): Promise<HTMLImageElement> =>
-  new Promise<HTMLImageElement>((resolve, reject) => {
+async function loadSpriteSheetFromUrl(url: string): Promise<HTMLImageElement> {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = url;
   });
+}
 
 const spriteSheetCreator =
   (createBitmapImage: typeof window.createImageBitmap) =>
