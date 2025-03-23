@@ -2,6 +2,7 @@ import SPRITES from '/sprite.png';
 import BaseLevel, { Level } from './level';
 import { Player } from './player';
 import { loadSpriteSheet } from './spriteSheet';
+import { State } from './state';
 import { assert } from './utils';
 
 const MAX_FPS = 10;
@@ -9,50 +10,23 @@ const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
 
 let previousTimeMs = 0;
 
-const pressedKeys = new Set<string>();
-const isKeyDown = (key: string) => pressedKeys.has(key);
-
-function emitKeyDown(event: KeyboardEvent) {
-  pressedKeys.add(event.key);
-}
-
-function emitKeyUp(event: KeyboardEvent, player: Player) {
-  pressedKeys.delete(event.key);
-  player.isWalking = false;
-}
-
-function updatePhysics(player: Player) {
-  if (isKeyDown('ArrowLeft')) {
-    console.log('move left');
-    player.move(-1, 0);
-  } else if (isKeyDown('ArrowRight')) {
-    player.move(1, 0);
-  } else if (isKeyDown('ArrowUp')) {
-    console.log('move up');
-    player.move(0, -1);
-  } else if (isKeyDown('ArrowDown')) {
-    console.log('move down');
-    player.move(0, 1);
-  }
-}
-
-function draw(ctx: CanvasRenderingContext2D, level: Level, player: Player) {
+function draw(ctx: CanvasRenderingContext2D, level: Level, state: State) {
   // Draw game here
   level.render(ctx);
-  player.render(ctx);
+  state.player.render(ctx);
 }
 
-function update(ctx: CanvasRenderingContext2D, level: Level, player: Player) {
+function update(ctx: CanvasRenderingContext2D, level: Level, state: State) {
   requestAnimationFrame((currentTimeMs) => {
     const deltaTimeMs = currentTimeMs - previousTimeMs;
     if (deltaTimeMs >= FRAME_INTERVAL_MS) {
-      updatePhysics(player);
+      state.update();
       // Synchronize next frame to arrive on time
       const offset = deltaTimeMs % FRAME_INTERVAL_MS;
       previousTimeMs = currentTimeMs - offset;
     }
-    draw(ctx, level, player);
-    update(ctx, level, player);
+    draw(ctx, level, state);
+    update(ctx, level, state);
   });
 }
 
@@ -85,8 +59,10 @@ export async function setupGame(
   const level = new Level(cols, rows, BaseLevel, spriteSheet);
   const player = new Player(cols, rows, spriteSheet, level);
 
-  document.addEventListener('keydown', (e) => emitKeyDown(e));
-  document.addEventListener('keyup', (e) => emitKeyUp(e, player));
+  const state = new State(player);
 
-  update(ctx, level, player);
+  document.addEventListener('keydown', (e) => state.emitKeyDown(e));
+  document.addEventListener('keyup', (e) => state.emitKeyUp(e));
+
+  update(ctx, level, state);
 }
