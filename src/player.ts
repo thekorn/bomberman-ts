@@ -3,11 +3,14 @@ import type { Pos } from './pos';
 import type { ISpriteSheet } from './spriteSheet';
 import { assert } from './utils';
 
+const MAX_HEALTH = 50;
+
 export class Player {
   /** Position of the player's feet */
   public pos: Pos;
   public isWalking: boolean;
   private frame: number;
+  private health: number = MAX_HEALTH;
   constructor(
     public width: number,
     public height: number,
@@ -31,6 +34,14 @@ export class Player {
     return !this.level.isWall(x, y);
   }
 
+  takeDamage(amount = 1) {
+    if (!this.isDead) this.health -= amount;
+  }
+
+  get isDead(): boolean {
+    return this.health <= 0;
+  }
+
   render(ctx: CanvasRenderingContext2D) {
     const dimX = ctx.canvas.width / this.width;
     const dimY = ctx.canvas.height / this.height;
@@ -48,5 +59,8 @@ export class Player {
       dimX,
       dimY * 2,
     );
+    if (this.health < MAX_HEALTH && !this.isDead) {
+      console.log('Player is hurt', this.health / MAX_HEALTH);
+    }
   }
 }

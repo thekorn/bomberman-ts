@@ -55,6 +55,23 @@ export class State {
       if (bomb.isDone) {
         this.bombs.delete(key);
       }
+      console.log(
+        bomb.pos.x,
+        this.player.pos.x,
+        bomb.pos.y - 1,
+        this.player.pos.y,
+      );
+      if (
+        bomb.pos.x === this.player.pos.x &&
+        bomb.pos.y - 1 === this.player.pos.y &&
+        bomb.isExploded
+      ) {
+        this.player.takeDamage();
+      }
+    }
+
+    if (this.player.isDead) {
+      console.log('PLAYER IS DEAD');
     }
 
     console.log('update physics', this.bombs);
