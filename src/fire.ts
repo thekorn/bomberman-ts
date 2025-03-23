@@ -21,7 +21,7 @@ export class Fire {
     return this.state < 0;
   }
 
-  private getSpriteName(): string {
+  protected getSpriteName(): string {
     return `fire-${Math.abs(this.state % 5)}`;
   }
 

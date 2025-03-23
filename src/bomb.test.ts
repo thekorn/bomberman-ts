@@ -8,7 +8,7 @@ class TestBomb extends Bomb {
   }
 }
 
-test('should get position from index', () => {
+test('should return the correct sprite name and isDone status', () => {
   const pos = new Pos(0, 0);
   const b = new TestBomb(pos, 10, 10, new Map());
   expect(b.isDone).toBe(false);
