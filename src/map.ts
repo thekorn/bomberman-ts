@@ -1,11 +1,11 @@
 import { Pos } from './pos';
 import { assert } from './utils';
 
-type Wall = 'W';
-type Walkable = 'O';
-type Player = 'P';
+const Wall = 'W' as const;
+const Walkable = 'O' as const;
+const Player = 'P' as const;
 
-export type Tile = Wall | Walkable | Player;
+export type Tile = typeof Wall | typeof Walkable | typeof Player;
 
 export function createMap(
   width: number,
@@ -19,7 +19,7 @@ export function createMap(
   for (let y = 0; y < height; y++) {
     assert(level[y].length === width, 'width must match level width');
     for (let x = 0; x < width; x++) {
-      if (level[y][x] === 'P') {
+      if (level[y][x] === Player) {
         assert(playerPos === undefined, 'only one player allowed');
         playerPos = new Pos(x, y);
         result.push('O');

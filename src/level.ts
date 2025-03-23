@@ -3,7 +3,7 @@ import { Pos } from './pos';
 import type { ISpriteSheet } from './spriteSheet';
 import { assert } from './utils';
 
-const fill = (length: number, tile: Tile | Tile[]) => Array(length).fill(tile);
+const fill = (length: number, tile: Tile) => Array(length).fill(tile);
 
 // 23 x 12
 const level: Tile[][] = [
