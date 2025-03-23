@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint": "biome check --fix",
     "test": "vitest run --coverage.enabled=true",
+    "check": "biome check",
     "test:ui": "vitest --ui --coverage.enabled=true"
   },
   "devDependencies": {
