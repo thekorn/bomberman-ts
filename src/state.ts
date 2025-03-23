@@ -84,6 +84,39 @@ export class State {
     }
   }
 
+  private renderGameOver(ctx: CanvasRenderingContext2D) {
+    const canvas = ctx.canvas;
+
+    const text = 'Game Over';
+    ctx.font = 'bold 48px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const textMetrics = ctx.measureText(text);
+    const textWidth = textMetrics.width;
+    const textHeight = 48;
+
+    const padding = 10;
+    const boxWidth = textWidth + padding * 2;
+    const boxHeight = textHeight + padding * 2;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    const boxX = centerX - boxWidth / 2;
+    const boxY = centerY - boxHeight / 2;
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+    ctx.fillStyle = 'black';
+    ctx.fillText(text, centerX, centerY);
+  }
+
   render(ctx: CanvasRenderingContext2D) {
     for (const bomb of this.bombs.values()) {
       bomb.render(ctx);
@@ -94,36 +127,7 @@ export class State {
     }
 
     if (this.player.isDead) {
-      const canvas = ctx.canvas;
-
-      const text = 'Game Over';
-      ctx.font = 'bold 48px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-      const textMetrics = ctx.measureText(text);
-      const textWidth = textMetrics.width;
-      const textHeight = 48;
-
-      const padding = 10;
-      const boxWidth = textWidth + padding * 2;
-      const boxHeight = textHeight + padding * 2;
-
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      const boxX = centerX - boxWidth / 2;
-      const boxY = centerY - boxHeight / 2;
-
-      ctx.fillStyle = 'white';
-      ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-
-      ctx.strokeStyle = 'black';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-
-      ctx.fillStyle = 'black';
-      ctx.fillText(text, centerX, centerY);
+      this.renderGameOver(ctx);
     } else {
       this.player.render(ctx);
     }
