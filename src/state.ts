@@ -1,12 +1,19 @@
 import { Bomb } from './bomb';
 import type { Player } from './player';
 import { Pos } from './pos';
+import type { ISpriteSheet } from './spriteSheet';
 
 export class State {
   public pressedKeys = new Set<string>();
   public bombs = new Map<string, Bomb>();
 
-  constructor(public player: Player) {}
+  constructor(
+    public player: Player,
+    public width: number,
+    public height: number,
+    public spriteSheet: ISpriteSheet,
+  ) {}
+
   private isKeyDown(key: string) {
     return this.pressedKeys.has(key);
   }
@@ -36,10 +43,27 @@ export class State {
       console.log('place bomb');
       const key = `${this.player.pos.x},${this.player.pos.y}`;
       if (!this.bombs.has(key)) {
-        const p = new Pos(this.player.pos.x, this.player.pos.y);
-        this.bombs.set(key, new Bomb(p));
+        const p = new Pos(this.player.pos.x, this.player.pos.y + 1);
+        this.bombs.set(
+          key,
+          new Bomb(p, this.width, this.height, this.spriteSheet),
+        );
       }
     }
+    for (const [key, bomb] of this.bombs.entries()) {
+      bomb.tick();
+      if (bomb.isDone) {
+        this.bombs.delete(key);
+      }
+    }
+
     console.log('update physics', this.bombs);
+  }
+
+  render(ctx: CanvasRenderingContext2D) {
+    for (const bomb of this.bombs.values()) {
+      bomb.render(ctx);
+    }
+    this.player.render(ctx);
   }
 }

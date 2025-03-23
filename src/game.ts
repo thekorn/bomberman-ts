@@ -13,7 +13,7 @@ let previousTimeMs = 0;
 function draw(ctx: CanvasRenderingContext2D, level: Level, state: State) {
   // Draw game here
   level.render(ctx);
-  state.player.render(ctx);
+  state.render(ctx);
 }
 
 function update(ctx: CanvasRenderingContext2D, level: Level, state: State) {
@@ -54,12 +54,22 @@ export async function setupGame(
     ['bomber-man-5', [5 * 64, 64, 64, 128]],
     ['bomber-man-6', [6 * 64, 64, 64, 128]],
     ['bomber-man-7', [7 * 64, 64, 64, 128]],
+
+    ['bomb-0', [0, 192, 64, 64]],
+    ['bomb-1', [64, 192, 64, 64]],
+    ['bomb-2', [128, 192, 64, 64]],
+
+    ['fire-0', [0 * 64, 256, 64, 64]],
+    ['fire-1', [1 * 64, 256, 64, 64]],
+    ['fire-2', [2 * 64, 256, 64, 64]],
+    ['fire-3', [3 * 64, 256, 64, 64]],
+    ['fire-4', [4 * 64, 256, 64, 64]],
   ]);
 
   const level = new Level(cols, rows, BaseLevel, spriteSheet);
   const player = new Player(cols, rows, spriteSheet, level);
 
-  const state = new State(player);
+  const state = new State(player, cols, rows, spriteSheet);
 
   document.addEventListener('keydown', (e) => state.emitKeyDown(e));
   document.addEventListener('keyup', (e) => state.emitKeyUp(e));
