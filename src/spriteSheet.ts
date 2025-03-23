@@ -11,7 +11,7 @@ export const loadSpriteSheetFromUrl = (
     img.src = url;
   });
 
-export const spriteSheetCreator =
+const spriteSheetCreator =
   (createBitmapImage: typeof window.createImageBitmap) =>
   async (
     sheet: CanvasImageSource,
